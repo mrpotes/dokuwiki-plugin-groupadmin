@@ -1,0 +1,7 @@
+base   groupadmin
+author James Phillpotts
+email  james.dokuwiki@potes.org.uk
+date   2011-08-04
+name   groupadmin plugin
+desc   Group membership admin from group perspective
+url    http://www.dokuwiki.org/plugin:groupadmin
