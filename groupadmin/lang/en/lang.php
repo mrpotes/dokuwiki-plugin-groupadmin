@@ -5,12 +5,7 @@
  * @author James Phillpotts <james.dokuwiki@potes.org.uk>
  */
 
-// menu entry for admin plugins
-// $lang['menu'] = 'Your menu entry';
+$lang['title'] = 'Group Membership';
 
-// custom language strings for the plugin
-// $lang['fixme'] = 'FIXME';
-
-
-
-//Setup VIM: ex: et ts=4 :
+$lang['noauth'] = ' - Authentication not enabled. Plugin not in use';
+$lang['nosupport'] = ' - Authentication does not support groups. Plugin not in use';
