@@ -124,7 +124,7 @@ class admin_plugin_groupadmin extends DokuWiki_Admin_Plugin {
 			$users_in_group = $this->_auth->retrieveUsers(0, -1, $filter);
 			$all_users = $this->_auth->retrieveUsers();
 
-			ptln('    <select id="allusers" multiple="multiple" size="20">');
+			ptln('    <select id="allusers" multiple="multiple" size="20" ondblclick="add()">');
 			foreach ($all_users as $user => $userinfo) {
 				extract($userinfo);
 				if (!in_array($userinfo, $users_in_group)) {
@@ -138,7 +138,7 @@ class admin_plugin_groupadmin extends DokuWiki_Admin_Plugin {
 			ptln('    <button type="button" onclick="remove()">'.$this-getLang('btn_remove').'</button>');
 			ptln('    <button type="button" onclick="removeall()">'.$this-getLang('btn_removeall').'</button>');
 			
-			ptln('    <select id="groupusers" name="users[]" multiple="multiple" size="20">');
+			ptln('    <select id="groupusers" name="users[]" multiple="multiple" size="20" ondoubleclick="remove()">');
 			foreach ($users_in_group as $user => $userinfo) {
 				extract($userinfo);
 				if (!in_array($userinfo, $users_in_group)) {
@@ -154,15 +154,31 @@ class admin_plugin_groupadmin extends DokuWiki_Admin_Plugin {
 	}
 
 	function _saveGroup() {
+		$usernames = $_REQUEST['users[]'];
+		
 		$group_filter = array();
 		$group_filter['grps'] = $groupName;
 		$oldusers = $this->_auth->retrieveUsers(0, -1, $group_filter);
 
 		$removed_users = array();
 		foreach ($oldusers as $olduser => $olduserinfo) {
-			if (!in_array($olduser, $usernames))
-			array_push($removed_users, $olduserinfo);
+			if (!in_array($olduser, $usernames)) {
+				extract($userinfo);
+				$newgrps = array();
+				foreach($userinfo['grps'] as $grpname) {
+					if ($grpname != $this->_group_name) {
+						array_push($newgrps, $grpname);
+					}
+				}
+				$this->_modifyUser($newgrps);
+			}
 		}
 		msg($this->lang['update_ok'],1);
+	}
+	
+	function _modifyUser($newgrps) {
+		$changes = array();
+		$changes['grps'] = $newgrps;
+		$this->_auth->triggerUserMod('modify', array($olduser, $changes));
 	}
 }
